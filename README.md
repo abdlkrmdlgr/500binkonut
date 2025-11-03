@@ -96,5 +96,5 @@ Web versiyonu için:
 
 ## 📝 Lisans
 
-Bu proje bilgilendirme amaçlıdır. TOKİ resmi bilgilerine göre hazırlanmıştır.
+Bu proje bilgilendirme amaçlıdır. TOKİ resmi bilgilerine göre hazırlanmıştır. Resmi bir sorgulama değildir. Daha doğru bigiler için lütfen ilgili başkanlığın sayfasını kontrol ediniz.
 
