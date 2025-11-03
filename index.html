@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOKİ Başvuru Uygunluk Kontrolü</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .step {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-content {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            min-height: 200px;
+        }
+
+        .step-title {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group small {
+            display: block;
+            color: #666;
+            margin-top: 5px;
+            font-size: 13px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checkbox-group:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            margin-top: 2px;
+        }
+
+        .checkbox-group label {
+            flex: 1;
+            margin: 0;
+            cursor: pointer;
+            font-weight: normal;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .radio-group .radio-option {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .radio-option {
+            flex: 1;
+            padding: 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .radio-option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .radio-option input[type="radio"] {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .radio-option.selected {
+            border-color: #667eea;
+            background: #e7f0ff;
+            font-weight: bold;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .result.success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            display: block;
+        }
+
+        .result.error {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            display: block;
+        }
+
+        .result h3 {
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .result.success h3 {
+            color: #155724;
+        }
+
+        .result.error h3 {
+            color: #721c24;
+        }
+
+        .category-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .category-list li {
+            padding: 15px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 5px;
+            border-left: 3px solid #28a745;
+        }
+
+        .category-list li strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        .error-list {
+            list-style: none;
+        }
+
+        .error-list li {
+            padding: 10px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 5px;
+            color: #721c24;
+        }
+
+        .error-list li:before {
+            content: "❌ ";
+            margin-right: 5px;
+        }
+
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            color: #1976D2;
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏡 TOKİ Başvuru Uygunluk Kontrolü</h1>
+            <p>500 Bin Sosyal Konut Projesi</p>
+        </div>
+
+        <div class="content">
+            <div class="progress-text">
+                <span id="stepInfo">Soru 1 / 19</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <form id="basvuruForm">
+                <!-- Adım 1: Doğum Tarihi -->
+                <div class="step active" id="step1">
+                    <div class="step-content">
+                        <h2 class="step-title">📅 Doğum Tarihi</h2>
+                        <div class="form-group">
+                            <label for="dogum_tarihi">Doğum Tarihi (GG.AA.YYYY) *</label>
+                            <input type="text" id="dogum_tarihi" placeholder="15.05.1990" required>
+                            <small>Örnek: 15.05.1990 - 18 yaşını doldurmuş olmalısınız (Şehit yakını ve Gazi için yaş sınırı yoktur)</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adım 2: Vatandaşlık Durumu -->
+                <div class="step" id="step3">
+                    <div class="step-content">
+                        <h2 class="step-title">🆔 Vatandaşlık Durumu</h2>
+                        <div class="form-group">
+                            <label>Vatandaşlık durumunuz *</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="vatandaslik_durumu" value="tc" required>
+                                    T.C. Vatandaşıyım
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="vatandaslik_durumu" value="yabancu" required>
+                                    Yabancı Uyruklu Vatandaşım
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adım 3: Vatandaşlık Yılı (Sadece Yabancı uyruklu vatandaşlar için) -->
+                <div class="step conditional" id="step4_conditional" data-condition="vatandaslik_durumu:yabancu">
+                    <div class="step-content">
+                        <h2 class="step-title">📅 Vatandaşlık Yılı</h2>
+                        <div class="form-group">
+                            <label for="vatandaslik_yili">T.C. Vatandaşı Olduğunuz Yıl *</label>
+                            <input type="number" id="vatandaslik_yili" min="1900" max="2025" required>
+                            <small>En az 10 yıldır T.C. vatandaşı olmalısınız</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adım 4: İkamet İli -->
+                <div class="step" id="step5">
+                    <div class="step-content">
+                        <h2 class="step-title">🏠 İkamet Bilgisi</h2>
+                        <div class="form-group">
+                            <label for="ikamet_ili">İkamet Ettiğiniz İl *</label>
+                            <select id="ikamet_ili" required>
+                                <option value="">Seçiniz...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adım 5: İkamet Süresi -->
+                <div class="step" id="step5">
+                    <div class="step-content">
+                        <h2 class="step-title">⏱️ İkamet Süresi</h2>
+                        <div class="form-group">
+                            <label>Başvuru döneminden geriye doğru ikamet süreniz *</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="ikamet_suresi" value="1_yildan_az" required>
+                                    1 Yıldan Az
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="ikamet_suresi" value="1_3_yil" required>
+                                    1-3 Yıl Arası
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="ikamet_suresi" value="3_yildan_fazla" required>
+                                    3 Yıldan Fazla
+                                </label>
+                            </div>
+                            <small>Genel olarak en az 1 yıl ikamet gereklidir. Şehit/Gazi kategorisi için en az 3 yıl ikamet şartı vardır.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adım 6: Nüfusa Kayıtlı İl -->
+                <div class="step" id="step6">
+                    <div class="step-content">
+                        <h2 class="step-title">📋 Nüfus Kaydı</h2>
+                        <div class="form-group">
+                            <label for="nufusa_kayitli_il">Nüfusa Kayıtlı Olduğunuz İl *</label>
+                            <select id="nufusa_kayitli_il" required>
+                                <option value="">Seçiniz...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adım 7: Proje İli -->
+                <div class="step" id="step7">
+                    <div class="step-content">
+                        <h2 class="step-title">🏡 Başvuru İli</h2>
+                        <div class="form-group">
+                            <label for="proje_ili">Başvuru Yapmak İstediğiniz Proje İli *</label>
+                            <select id="proje_ili" required>
+                                <option value="">Seçiniz...</option>
+                            </select>
+                            <small>İstanbul için gelir sınırı 145.000 TL, diğer iller için 127.000 TL'dir</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adım 8: Konut Durumu -->
+                <div class="step" id="step8">
+                    <div class="step-content">
+                        <h2 class="step-title">🏘️ Konut Durumu</h2>
+                        <div class="form-group">
+                            <label>Kendiniz, eşiniz veya velayetiniz altındaki çocuklarınız üzerine tapuda kayıtlı konutunuz var mı? *</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="konut_var" value="evet" required>
+                                    Evet
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="konut_var" value="hayir" required>
+                                    Hayır
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group" id="konut_deger_group" style="display: none;">
+                            <label for="konut_hisse_degeri">Konutunuzun Hisse Değeri (TL) *</label>
+                            <input type="number" id="konut_hisse_degeri" min="0" step="0.01">
+                            <small>1 milyon TL'yi geçmemeli</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adım 9: Anne-Baba Konut (Sadece 18-30 yaş için) -->
+                <div class="step conditional" id="step9_conditional" data-condition="dogum_tarihi:18-30">
+                    <div class="step-content">
+                        <h2 class="step-title">👨‍👩‍👧 Anne/Baba Konut</h2>
+                        <div class="form-group">
+                            <label>Anne veya babanız üzerine tapuda kayıtlı konut var mı? *</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="anne_baba_konut_var" value="evet">
+                                    Evet
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="anne_baba_konut_var" value="hayir">
+                                    Hayır
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adım 10: Yapı Kullanım Belgesi -->
+                <div class="step" id="step10">
+                    <div class="step-content">
+                        <h2 class="step-title">📄 Yapı Kullanım Belgesi</h2>
+                        <div class="form-group">
+                            <label>Yapı kullanım belgeniz var mı? *</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="yapi_kullanim_belgesi_var" value="evet" required>
+                                    Evet
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="yapi_kullanim_belgesi_var" value="hayir" required>
+                                    Hayır
+                                </label>
+                            </div>
+                            <small style="margin-top: 10px; display: block;">⚠️ Yapı kullanım belgesi olanlar başvuru yapamaz</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adım 11: Aylık Gelir -->
+                <div class="step" id="step11">
+                    <div class="step-content">
+                        <h2 class="step-title">💰 Aylık Gelir</h2>
+                        <div class="form-group">
+                            <label for="aylik_gelir">Aylık Hane Halkı Net Geliri (TL) *</label>
+                            <input type="number" id="aylik_gelir" min="0" step="0.01" required>
+                            <small>Son 12 ay ortalaması (özel kesintilerden önceki gelir). İstanbul: max 145.000 TL, Diğer iller: max 127.000 TL</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adım 12: Şehit/Gazi Durumu -->
+                <div class="step" id="step12">
+                    <div class="step-content">
+                        <h2 class="step-title">⭐ Şehit/Gazi Durumu</h2>
+                        <div class="form-group">
+                            <label>Şehit yakını, terör/harp/vazife malulü veya gazi misiniz? *</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="sehît_gazi_mu" value="evet" required>
+                                    Evet
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="sehît_gazi_mu" value="hayir" required>
+                                    Hayır
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adım 13: Engellilik Durumu -->
+                <div class="step" id="step13">
+                    <div class="step-content">
+                        <h2 class="step-title">♿ Engellilik Durumu</h2>
+                        <div class="form-group">
+                            <label>Engelli misiniz?*</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="engelli_mi" value="evet" required>
+                                    Evet
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="engelli_mi" value="hayir" required>
+                                    Hayır
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adım 13b: Engellilik Oranı (Sadece engelli ise) -->
+                <div class="step conditional" id="step13b_conditional" data-condition="engelli_mi:evet">
+                    <div class="step-content">
+                        <h2 class="step-title">📊 Engellilik Oranı</h2>
+                        <div class="form-group">
+                            <label for="engelli_orani">Engellilik Oranınız (%) *</label>
+                            <input type="number" id="engelli_orani" min="0" max="100" required>
+                            <small>%40 ve üzeri engellilik oranına sahip olanlar özel kategoriden başvurabilir</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adım 14: Engelli Çocuk -->
+                <div class="step" id="step14">
+                    <div class="step-content">
+                        <h2 class="step-title">👶 Engelli Çocuk</h2>
+                        <div class="form-group">
+                            <label>Engelli çocuğunuz var mı? *</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="sadece_cocuk_engelli" value="evet" required>
+                                    Evet
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="sadece_cocuk_engelli" value="hayir" required>
+                                    Hayır
+                                </label>
+                            </div>
+                            <small>Engelli çocukları olan ebeveynler engelli kategorisinden başvuru yapamaz</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adım 15: Emeklilik -->
+                <div class="step" id="step15">
+                    <div class="step-content">
+                        <h2 class="step-title">👴 Emeklilik</h2>
+                        <div class="form-group">
+                            <label>Emekli misiniz? *</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="emekli_mu" value="evet" required>
+                                    Evet
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="emekli_mu" value="hayir" required>
+                                    Hayır
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adım 16: Çocuk Sayısı -->
+                <div class="step" id="step16">
+                    <div class="step-content">
+                        <h2 class="step-title">👶 Çocuk Bilgisi</h2>
+                        <div class="form-group">
+                            <label for="cocuk_sayisi_uygun">19.12.2007 Sonrası Doğan, 18 Yaş Altı Çocuk Sayınız *</label>
+                            <input type="number" id="cocuk_sayisi_uygun" min="0" value="0" required>
+                            <small>3 ve daha fazla çocuğa sahip aileler için özel kategori var</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adım 17: Yurt Dışı -->
+                <div class="step" id="step17">
+                    <div class="step-content">
+                        <h2 class="step-title">🌍 Yurt Dışı İkamet</h2>
+                        <div class="form-group">
+                            <label>Yurt dışında mı yaşıyorsunuz? *</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="yurt_disi_ikamet" value="evet" required>
+                                    Evet
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="yurt_disi_ikamet" value="hayir" required>
+                                    Hayır
+                                </label>
+                            </div>
+                            <small>Yurt dışında yaşayan T.C. vatandaşları başvuru yapamaz</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adım 18: Önceki TOKİ Başvurusu -->
+                <div class="step" id="step18">
+                    <div class="step-content">
+                        <h2 class="step-title">🏠 Önceki TOKİ Başvurusu</h2>
+                        <div class="form-group">
+                            <label>Daha önce TOKİ ile sözleşme yaptınız mı? *</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="onceki_toki_basvurusu" value="evet" required>
+                                    Evet
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="onceki_toki_basvurusu" value="hayir" required>
+                                    Hayır
+                                </label>
+                            </div>
+                            <small>Daha önce TOKİ ile sözleşme yapmış olanlar başvuru yapamaz</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adım 19: Önceki Sosyal Konut -->
+                <div class="step" id="step19">
+                    <div class="step-content">
+                        <h2 class="step-title">🏘️ Önceki Sosyal Konut</h2>
+                        <div class="form-group">
+                            <label>Daha önce Sosyal Konut Projelerinde asil/yedek hak sahibi oldunuz mu? *</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="onceki_sosyal_konut_hak_sahibi" value="evet" required>
+                                    Evet
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="onceki_sosyal_konut_hak_sahibi" value="hayir" required>
+                                    Hayır
+                                </label>
+                            </div>
+                            <small>Önceki Sosyal Konut Projelerinde hak sahibi olanlar başvuru yapamaz (İstenirse önceki başvuru iptal edilerek yeni projeye başvurulabilir)</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigasyon Butonları -->
+                <div class="button-group" id="buttonGroup">
+                    <button type="button" class="btn btn-secondary" id="prevBtn" style="display: none;">⬅️ Geri</button>
+                    <button type="button" class="btn" id="nextBtn">İleri ➡️</button>
+                </div>
+            </form>
+
+            <div id="result" class="result"></div>
+        </div>
+    </div>
+
+    <script src="turkiye_illeri.js"></script>
+    <script src="basvuru_kontrol_web.js"></script>
+</body>
+</html>
