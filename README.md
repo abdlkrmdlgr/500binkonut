@@ -1,6 +1,7 @@
 # 🏡 TOKİ Başvuru Uygunluk Kontrolü
 
 Bu proje, **500 Bin Sosyal Konut Projesi** için başvuru yapabilme uygunluğunu kontrol eden bir karar ağacı sistemidir.
+
 💡 Bu proje bilgilendirme amaçlıdır. Kesin uygunluk için resmi başvuru yapmanız gerekmektedir. Hak kaybına uğramamanız için lütfen ilgili başkanlığın sayfasını inceleyiniz
 
 ## 📋 Özellikler
