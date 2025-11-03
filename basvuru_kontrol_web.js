@@ -292,8 +292,46 @@ document.getElementById('prevBtn').addEventListener('click', function(e) {
     prevStep();
 });
 
+// Doğum tarihi formatlaması - otomatik nokta ekleme
+function formatDogumTarihi(value) {
+    // Sadece rakamları al
+    const numbers = value.replace(/\D/g, '');
+    
+    // Maksimum 8 rakam (GGAAYYYY)
+    const limitedNumbers = numbers.slice(0, 8);
+    
+    // Formatı oluştur: GG.AA.YYYY
+    let formatted = '';
+    if (limitedNumbers.length > 0) {
+        formatted = limitedNumbers.slice(0, 2); // Gün
+        if (limitedNumbers.length > 2) {
+            formatted += '.' + limitedNumbers.slice(2, 4); // Ay
+        }
+        if (limitedNumbers.length > 4) {
+            formatted += '.' + limitedNumbers.slice(4, 8); // Yıl
+        }
+    }
+    
+    return formatted;
+}
+
 // Doğum tarihi değiştiğinde conditional step'leri kontrol et (18-30 yaş için anne-baba konut sorusu)
-document.getElementById('dogum_tarihi')?.addEventListener('input', function() {
+document.getElementById('dogum_tarihi')?.addEventListener('input', function(e) {
+    const input = e.target;
+    const cursorPosition = input.selectionStart;
+    const oldValue = input.value;
+    const newValue = formatDogumTarihi(oldValue);
+    
+    // Eğer değer değiştiyse güncelle
+    if (oldValue !== newValue) {
+        input.value = newValue;
+        
+        // Cursor pozisyonunu ayarla (nokta eklenirse cursor'ı ileri al)
+        const addedChars = newValue.length - oldValue.length;
+        const newCursorPosition = cursorPosition + addedChars;
+        input.setSelectionRange(newCursorPosition, newCursorPosition);
+    }
+    
     updateVisibleSteps();
 });
 
