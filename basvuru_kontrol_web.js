@@ -693,7 +693,7 @@ function kontrolEtVeGoster() {
                 `).join('')}
             </ul>
             <div class="info-box">
-                💡 Bu sonuçlar bilgilendirme amaçlıdır. Kesin uygunluk için resmi başvuru yapmanız gerekmektedir.
+                💡 Bu sonuçlar bilgilendirme amaçlıdır. Kesin uygunluk için resmi başvuru yapmanız gerekmektedir. Hak kaybına uğramamanız için lütfen ilgili başkanlığın sayfasını inceleyiniz!
             </div>
         `;
     } else {
@@ -705,7 +705,7 @@ function kontrolEtVeGoster() {
                 ${sonuc.hatalar.map(hata => `<li>${hata}</li>`).join('')}
             </ul>
             <div class="info-box">
-                💡 Bu sonuçlar bilgilendirme amaçlıdır. Kesin uygunluk için resmi başvuru yapmanız gerekmektedir.
+                💡 Bu sonuçlar bilgilendirme amaçlıdır. Kesin uygunluk için resmi başvuru yapmanız gerekmektedir. Hak kaybına uğramamanız için lütfen ilgili başkanlığın sayfasını inceleyiniz!
             </div>
         `;
     }
